@@ -16,5 +16,5 @@ link_libraries(C:/Users/micha/AppData/Local/Programs/Python/Python39/libs/python
 
 
 
-add_executable(lab main.cpp)
+add_executable(lab main.cpp tube_array.h tube_array.tpp)
 
