@@ -5,11 +5,11 @@
 using namespace std;
 
 void Point::set_type(bool a){
-    if (a == 0) {//граница или вне
+    if (!a) {//граница или вне
         _type = false;
         set_concentrate(0);
     }
-    else if (a == 1) {//точка для рассчета внутри трубы
+    else if (a) {//точка для рассчета внутри трубы
         _type = true;
     }
     else {return;}
@@ -43,11 +43,11 @@ Tube::Tube(int rad, int len) {
     _diam = 2 * rad + 1;
 
     //выделяем память под трубу
-    A = new Point **[len];
-    for (int j = 0; j < len; j ++){
-        A[j] = new Point *[2 * rad + 1];
-        for (int i = 0; i < 2 * rad + 1; i++){
-            A[j][i] = new Point[2 * rad + 1];
+    A = new Point **[_len];
+    for (int j = 0; j < _len; j ++){
+        A[j] = new Point *[2 * _rad + 1];
+        for (int i = 0; i < 2 * _rad + 1; i++){
+            A[j][i] = new Point[2 * _rad + 1];
         }
     }
 
@@ -57,6 +57,7 @@ Tube::Tube(int rad, int len) {
         for (int j = 0; j < 2 * rad + 1; j++){
             for ( int k = 0; k < len; k++){
                 A[k][i][j].type(true);
+                A[k][i][j].C(0);
             }
         }
     }
@@ -84,6 +85,7 @@ Tube::Tube(int rad, int len) {
         j = 0;
     }
 
+    // размножаем границу на остальные слои
     for (int i = 0; i < 2 * rad + 1; i++){
         for (j = 0; j < 2 * rad + 1; j++){
             for ( int k = 0; k < len - 1; k++){
@@ -93,23 +95,19 @@ Tube::Tube(int rad, int len) {
         }
     }
 
+    //создаем сплошную границу на концах трубы
     for (int i = 0; i < 2 * rad + 1; i++){
         for (j = 0; j < 2 * rad + 1; j++){
             A[0][i][j].type(false);
-        }
-    }
-    for (int i = 0; i < 2 * rad + 1; i++){
-        for (j = 0; j < 2 * rad + 1; j++){
             A[_len - 1][i][j].type(false);
         }
     }
-
 }
 
 Tube::Tube( const Tube &tube1)  {
 
-    _rad = tube1._rad; _len = tube1._len;
-    cout << "in constructor: rad and _rad = " <<'\t' << _rad << endl;
+    _rad = tube1.rad(); _len = tube1.len();
+   // cout << "in constructor: rad and _rad = " <<'\t' << _rad << endl;
 
     _diam = 2 * _rad + 1;
 
@@ -122,11 +120,12 @@ Tube::Tube( const Tube &tube1)  {
         }
     }
 
-    Point H = tube1.at(0, 0, 0);
-    for (int i = 0; i < 2 * _rad + 1; i++){
-        for (int j = 0; j < 2 * _rad + 1; j++){
-            for ( int k = 0; k < _len - 1; k++){
-                A[k][i][j].type( tube1.at(k, i, j).type() );
+    for ( int k = 0; k < _len; k++) {
+        for (int i = 0; i < 2 * _rad + 1; i++) {
+            for (int j = 0; j < 2 * _rad + 1; j++) {
+
+                A[k][i][j].type(tube1.at(k, i, j).type());
+
             }
         }
     }
@@ -136,19 +135,20 @@ int Tube::diam() const{
     return _diam;
 }
 
-const Point & Tube::at(int k, int i, int j) {
+Point & Tube::at(int k, int i, int j) const {
     return A[k][i][j];
 }
 
-void Tube::print(){
-    ofstream fout("output.txt");
+void Tube::print(const string& via) const{
+    ofstream fout(via);
+   // ofstream fout("output.txt");
 
     cout << " before print rad = " << _rad << endl;
 
     for (int k = 0; k < _len; k++) {
         for (int i = 0; i < 2 * _rad + 1; i++) {
             for (int j = 0; j < 2 * _rad + 1; j++) {
-                if (!A[k][i][j].type()) {
+                if (A[k][i][j].type() == false) {
                     fout << "1";
                 } else {
                     fout << "0";
@@ -159,6 +159,34 @@ void Tube::print(){
         fout << endl;
     }
     cout<<endl<<"printed"<<endl;
+
+}
+
+int Tube::rad() const {
+    return _rad;
+}
+
+int Tube::len() const {
+    return _len;
+}
+
+void Tube::printC(const string& via) const {
+
+    ofstream fout(via);
+    //ofstream fout("output_conc.txt");
+
+    cout << " before print rad = " << _rad << endl;
+
+    for (int k = 0; k < _len; k++) {
+        for (int i = 0; i < 2 * _rad + 1; i++) {
+            for (int j = 0; j < 2 * _rad + 1; j++) {
+                fout << A[k][i][j].C() << " ";
+            }
+            fout << endl;
+        }
+        fout << endl;
+    }
+    cout<<endl<<"printed C"<<endl;
 
 }
 
