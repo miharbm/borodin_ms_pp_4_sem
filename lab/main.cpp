@@ -2,6 +2,7 @@
 #include <cstdio>
 #include <cmath>
 #include <fstream>
+#include <windows.h>
 //#include <Python.h>
 //#include "matplotlib-cpp\matplotlibcpp.h"
 //#include <vector>
@@ -17,34 +18,45 @@ using namespace std;
 
 int main(){
 
-    int rad = 20, len = 5;//задание радиуса и длины трубы
+    // одному сантиметру трубы соотвествует одна ячейка
+
+    double length_metres; //длина трубы в метрах c точностью до 0.01 метра
+    double radius_metres; //радиус трубы в метрах с точностью до 0.01 метра
+
+    length_metres = 100;
+    radius_metres = 1;
+
+    int rad = (int)(radius_metres * 100.f);
+    int len = (int)(length_metres * 100.f); // задание радиуса и длины трубы
 
     Tube tube1 = Tube(rad,len); //создание трубы
-
-    Tube tube2 = Tube(tube1); //создание трубы похожей
-
-
-
+    Tube tube2 = Tube(tube1); //создание второй схожей трубы
 
     double tmp;
-    double D = 10 , time;
-    int h = 1; //шаг, но он всегда вроде одинаков, смотрю соседние клетки
+    double D = 10; // постоянная диффузии
+    double time; // время в секундах
+    double time_step; // шаг по времени 0,012 сек
+    double h = 1; //шаг, но он всегда вроде одинаков, смотрю соседние клетки
 
     //создаем на дне концентрацию равнуюю 100 (пока для примера)
     for (int k = 0 ; k < tube1.len(); k++){
         for (int i = tube1.diam() - 1; i > tube1.diam() * 0.9; i--){
             for (int j = 0; j < tube1.diam(); j++){
                 if(tube1.at(k, i, j).type()) {
-                    tube1.at(k, i ,j ).C(100);
+                    tube1.at(k, i ,j ).C(5);
                 }
             }
         }
     }
 
-    /*основной вычислительный процесс
+    tube1.printC("ggg");
 
-    for (time = 1; time < 10; time = time + 1) {
+    //основной вычислительный процесс
 
+    time = 0;
+    while (time < 300) {
+
+        time += time_step;
         for (int k = 0; k < tube1.len(); k++) {
             for (int i = 0; i < tube1.diam(); i++) {
                 for (int j = 0; j < tube1.diam(); j++) {
@@ -60,8 +72,7 @@ int main(){
             }
         }
 
-        time = time + 1;
-
+        time += time_step;
         for (int k = 0; k < tube2.len(); k++) {
             for (int i = 0; i < tube2.diam(); i++) {
                 for (int j = 0; j < tube2.diam(); j++) {
@@ -77,8 +88,7 @@ int main(){
             }
         }
     }
+
    tube1.printC("result");
-
-
 }
 

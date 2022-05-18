@@ -15,11 +15,11 @@ private:
 
 public:
 
-    void set_type(bool a);
+    void set_type(bool type_set);
     void set_concentrate( double concentrate);
-    [[nodiscard]] double C() const;
+    [[nodiscard]] double C() const; //возвращает значение концентрации
     void C(double concentrate_set);
-    [[nodiscard]] bool type() const;
+    [[nodiscard]] bool type() const; //возвращает значение типа точки
     void type(bool type_set);
 
 
@@ -27,23 +27,21 @@ public:
 
 class Tube {
 private:
-    int _rad, _len, _diam;
+    int _rad, _len, _diam; // радиус, длина и диаметр трубы
     Point *** A;
 
 public:
 
     //конструктор
     Tube(int rad, int len);
-    Tube(const Tube  &tube1);
+    Tube(const Tube  &tube1); // конструктор копирования
 
-    [[nodiscard]] int diam() const;
-    [[nodiscard]] int rad() const;
-    [[nodiscard]] int len() const;
-    [[nodiscard]] Point &at(int k, int i, int j) const;
-    void print(const std::string& via) const;
-    void printC(const std::string& via) const;
+    [[nodiscard]] int diam() const; // возвращает диаметр
+    [[nodiscard]] int rad() const; // возвращает радиус
+    [[nodiscard]] int len() const; // возвращает длину
+    [[nodiscard]] Point &at(int k, int i, int j) const; // возвращает класс точки
+    void print(const std::string& via) const; // печатает в файл границы
+    void printC(const std::string& via) const; // печатает в файл конацентрацию в каждой точке
 };
-
-
 
 #endif //LAB_TUBE_ARRAY_H

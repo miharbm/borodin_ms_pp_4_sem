@@ -4,12 +4,12 @@
 #include "tube_array.h"
 using namespace std;
 
-void Point::set_type(bool a){
-    if (!a) {//граница или вне
+void Point::set_type(bool type_set){
+    if (!type_set) { //граница или вне
         _type = false;
         set_concentrate(0);
     }
-    else if (a) {//точка для рассчета внутри трубы
+    else if (type_set) { //точка для рассчета внутри трубы
         _type = true;
     }
     else {return;}
@@ -148,7 +148,7 @@ void Tube::print(const string& via) const{
     for (int k = 0; k < _len; k++) {
         for (int i = 0; i < 2 * _rad + 1; i++) {
             for (int j = 0; j < 2 * _rad + 1; j++) {
-                if (A[k][i][j].type() == false) {
+                if (!A[k][i][j].type()) {
                     fout << "1";
                 } else {
                     fout << "0";

@@ -52,7 +52,7 @@ build cmake_object_order_depends_target_lab: phony || CMakeFiles/lab.dir
 build CMakeFiles/lab.dir/main.cpp.obj: CXX_COMPILER__lab_Debug C$:/Users/micha/OneDrive/Documents/GitHub/borodin_ms_pp_4_sem/lab/main.cpp || cmake_object_order_depends_target_lab
   DEP_FILE = CMakeFiles\lab.dir\main.cpp.obj.d
   FLAGS = --coverage -g -std=gnu++17
-  INCLUDES = -IC:/Users/micha/AppData/Local/Programs/Python/Python39/include -IC:/Users/micha/AppData/Local/Programs/Python/Python39/Lib/site-packages/numpy/core/include
+  INCLUDES = -IC:/Users/micha/AppData/Local/Programs/Python/Python39/Lib/site-packages/numpy/core/include
   OBJECT_DIR = CMakeFiles\lab.dir
   OBJECT_FILE_DIR = CMakeFiles\lab.dir
 
@@ -64,9 +64,9 @@ build CMakeFiles/lab.dir/main.cpp.obj: CXX_COMPILER__lab_Debug C$:/Users/micha/O
 #############################################
 # Link the executable lab.exe
 
-build lab.exe: CXX_EXECUTABLE_LINKER__lab_Debug CMakeFiles/lab.dir/main.cpp.obj | C$:/Users/micha/AppData/Local/Programs/Python/Python39/libs/python39.lib
+build lab.exe: CXX_EXECUTABLE_LINKER__lab_Debug CMakeFiles/lab.dir/main.cpp.obj
   FLAGS = --coverage -g
-  LINK_LIBRARIES = C:/Users/micha/AppData/Local/Programs/Python/Python39/libs/python39.lib  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
+  LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\lab.dir
   POST_BUILD = cd .
   PRE_LINK = cd .
