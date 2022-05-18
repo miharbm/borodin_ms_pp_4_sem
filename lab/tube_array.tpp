@@ -51,7 +51,7 @@ Tube::Tube(int rad, int len) {
         }
     }
 
-
+    cout << "memory allocated for first tube" << endl;
     //заполняем все элементы трубы будто они внутри трубы
     for (int i = 0; i < 2 * rad + 1; i++){
         for (int j = 0; j < 2 * rad + 1; j++){
@@ -120,6 +120,8 @@ Tube::Tube( const Tube &tube1)  {
         }
     }
 
+    cout << "memory allocated for second tube" << endl;
+
     for ( int k = 0; k < _len; k++) {
         for (int i = 0; i < 2 * _rad + 1; i++) {
             for (int j = 0; j < 2 * _rad + 1; j++) {
@@ -158,7 +160,7 @@ void Tube::print(const string& via) const{
         }
         fout << endl;
     }
-    cout<<endl<<"printed"<<endl;
+    cout << endl<<"printed border in "<< via << endl;
 
 }
 
@@ -186,7 +188,7 @@ void Tube::printC(const string& via) const {
         }
         fout << endl;
     }
-    cout<<endl<<"printed C"<<endl;
+    cout<<endl<<"printed C in "<< via << endl;
 
 }
 
