@@ -179,7 +179,7 @@ void Tube::printC(const string& via) const {
 
     cout << " before print rad = " << _rad << endl;
 
-    for (int k = 0; k < _len; k++) {
+    for (int k = 0; k < _len; k += 10) {
         for (int i = 0; i < 2 * _rad + 1; i++) {
             for (int j = 0; j < 2 * _rad + 1; j++) {
                 fout << A[k][i][j].C() << " ";
