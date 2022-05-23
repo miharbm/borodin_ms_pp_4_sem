@@ -13,24 +13,23 @@
 
 using namespace std;
 
-
-
+void dummyCells(Tube &tube, int k, int i, int j);
 
 int main(){
 
-    // одному сантиметру трубы соотвествует одна ячейка
+    // одному дециметру трубы соотвествует одна ячейка
 
-    double length_metres; //длина трубы в метрах c точностью до 0.01 метра
-    double radius_metres; //радиус трубы в метрах с точностью до 0.01 метра
+    double lengthMetres; //длина трубы в метрах c точностью до 0.1 метра
+    double radiusMetres; //радиус трубы в метрах с точностью до 0.1 метра
     double ratioMetresInts = 10.f;
 
-    length_metres = 100;
-    radius_metres = 1;
+    lengthMetres = 100;
+    radiusMetres = 1;
 
-    int rad = (int)(radius_metres * ratioMetresInts);
-    int len = (int)(length_metres * ratioMetresInts); // задание радиуса и длины трубы
+    int rad = (int)(radiusMetres * ratioMetresInts);
+    int len = (int)(lengthMetres * ratioMetresInts); // задание радиуса и длины трубы
 
-    cout << " rad len      " << rad << '\t' << len << endl;
+    //cout << " rad len      " << rad << '\t' << len << endl;
 
     Tube tube1 = Tube(rad,len); //создание трубы
     cout << "first tube created" << endl;
@@ -40,26 +39,26 @@ int main(){
     double tmp;
     double D = 10e-5; // постоянная диффузии
     double time; // время в секундах
-    double time_step ; // шаг по времени 0,012 сек
+    double timeStep ; // шаг по времени 0,012 сек
     double h = 1; //шаг, но он всегда вроде одинаков, смотрю соседние клетки
     double h2 = h * h;
     double C_H = 0.2;
 
 
-    time_step = 0.1 * (1.f/ratioMetresInts)*(1.f/ratioMetresInts) / D;
-    cout << "time_step = " <<time_step << endl;
+    timeStep = 0.1 * (1.f/ratioMetresInts)*(1.f/ratioMetresInts) / D;
+    cout << "timeStep = " <<timeStep << endl;
 
 
     // создаем лужу с 30 по 35 метр
 
-    double begin_pool_metres = 30, end_pool_metres = 35;
+    double beginPoolMetres = 30, endPoolMetres = 35;
 
-    int begin_pool = (int)(begin_pool_metres * ratioMetresInts);
-    int end_pool   = (int)(end_pool_metres   * ratioMetresInts); // задание радиуса и длины трубы
+    int beginPool = (int)(beginPoolMetres * ratioMetresInts);
+    int endPool   = (int)(endPoolMetres   * ratioMetresInts); // задание радиуса и длины трубы
 
 
-    for ( int k = begin_pool; k < end_pool; k++ ){
-        for (int i = tube1.diam() - 1; i > tube1.diam() * 0.96; i--){
+    for ( int k = beginPool; k < endPool; k++ ){
+        for (int i = tube1.diam() - 1; i > tube1.diam() * 0.7; i--){
             for (int j = 0; j < tube1.diam(); j++){
                 if(tube1.at(k, i, j).type()) {
                     tube1.at(k, i ,j ).C(C_H);
@@ -67,11 +66,11 @@ int main(){
             }
         }
     }
-    for ( int k = begin_pool; k < end_pool; k++ ){
-        for (int i = (int)(tube1.diam() * 0.96); i > tube1.diam() * 0.9; i--){
+    for ( int k = beginPool; k < endPool; k++ ){
+        for (int i = (int)(tube1.diam() * 0.7); i > tube1.diam() * 0.5; i--){
             for (int j = 0; j < tube1.rad(); j++){
                 if(tube1.at(k, i, j).type() && !tube1.at(k, i, j - 1).type()) {
-                    for (int l = j; l < 3; l++){
+                    for (int l = j; l < j + 3; l++){
                         tube1.at(k, i ,j ).C(C_H);
                         tube1.at(k, i ,tube1.diam() - l).C(C_H);
                     }
@@ -81,20 +80,22 @@ int main(){
     }
     cout << "border have been made"<<endl;
 
+    tube1.printType("border");
 
-    tube1.printC("ggg");
+    tube1.printC("concentrate_begin");
 
     //основной вычислительный процесс
 
     time = 0;
-    double time_max = time_step * 20;
-    while (time < time_max) {
+    double timeMax = timeStep * 20;
+    while (time < timeMax) {
 
-        time += time_step;
+        time += timeStep;
         for (int k = 0; k < tube1.len(); k++) {
             for (int i = 0; i < tube1.diam(); i++) {
                 for (int j = 0; j < tube1.diam(); j++) {
                     if (tube1.at(k, i, j).type()) {
+                        dummyCells(tube1, k, i, j);
                         tmp = tube1.at(k, i, j).C() + D * time * (tube1.at(k - 1,    i,     j  ).C()
                                                                 + tube1.at(k + 1,    i,     j  ).C()
                                                                 + tube1.at(     k, i - 1,    j  ).C()
@@ -109,7 +110,7 @@ int main(){
         }
 
         cout << "|";
-        time += time_step;
+        time += timeStep;
         for (int k = 0; k < tube2.len(); k++) {
             for (int i = 0; i < tube2.diam(); i++) {
                 for (int j = 0; j < tube2.diam(); j++) {
@@ -128,8 +129,31 @@ int main(){
         }
         cout << "|";
     }
-
+    cout << endl;
 
    tube1.printC("result");
 }
 
+void dummyCells(Tube &tube, int k, int i, int j){
+
+    double tmp = tube.at(k - 1,i,j).C();
+
+    if(!tube.at(k - 1,i,j).type()) {
+        tube.at(k - 1,i,j).C(tmp);
+    }
+    if(!tube.at(k,i - 1,j).type()) {
+        tube.at(k,i - 1,j).C(tmp);
+    }
+    if(!tube.at(k ,i,j - 1).type()) {
+        tube.at(k,i,j - 1).C(tmp);
+    }
+    if(!tube.at(k + 1,i,j).type()) {
+        tube.at(k + 1,i,j).C(tmp);
+    }
+    if(!tube.at(k ,i + 1,j).type()) {
+        tube.at(k,i + 1,j).C(tmp);
+    }
+    if(!tube.at(k ,i,j + 1).type()) {
+        tube.at(k,i,j + 1).C(tmp);
+    }
+}

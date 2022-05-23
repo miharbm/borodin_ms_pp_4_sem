@@ -4,18 +4,17 @@
 #include "tube_array.h"
 using namespace std;
 
-void Point::set_type(bool type_set){
+void Point::setType(bool type_set){
     if (!type_set) { //граница или вне
         _type = false;
-        set_concentrate(0);
+        setConcentrate(0);
     }
-    else if (type_set) { //точка для рассчета внутри трубы
+    else { //точка для рассчета внутри трубы
         _type = true;
     }
-    else {return;}
 }
 
-void Point::set_concentrate( double concentrate){
+void Point::setConcentrate( double concentrate){
     _concentrate = concentrate;
 }
 
@@ -24,7 +23,7 @@ double Point::C() const{
 }
 
 void Point::C(double concentrate_set) {
-    set_concentrate(concentrate_set);
+    setConcentrate(concentrate_set);
 }
 
 bool Point::type() const{
@@ -32,13 +31,13 @@ bool Point::type() const{
 }
 
 void Point::type(bool type_set){
-    set_type(type_set);
+    setType(type_set);
 }
 
 Tube::Tube(int rad, int len) {
 
     _rad = rad; _len = len;
-    cout << "in constructor: rad and _rad = " << rad <<'\t' << _rad << endl;
+    //cout << "in constructor: rad and _rad = " << rad <<'\t' << _rad << endl;
 
     _diam = 2 * rad + 1;
 
@@ -141,7 +140,7 @@ Point & Tube::at(int k, int i, int j) const {
     return A[k][i][j];
 }
 
-void Tube::print(const string& via) const{
+void Tube::printType(const string& via) const{
     ofstream fout(via);
    // ofstream fout("output.txt");
 
@@ -177,7 +176,7 @@ void Tube::printC(const string& via) const {
     ofstream fout(via);
     //ofstream fout("output_conc.txt");
 
-    cout << " before print rad = " << _rad << endl;
+    //cout << "before print rad = " << _rad << endl;
 
     for (int k = 0; k < _len; k += 10) {
         for (int i = 0; i < 2 * _rad + 1; i++) {

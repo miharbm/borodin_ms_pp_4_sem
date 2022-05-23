@@ -15,8 +15,8 @@ private:
 
 public:
 
-    void set_type(bool type_set);
-    void set_concentrate( double concentrate);
+    void setType(bool type_set);
+    void setConcentrate( double concentrate);
     [[nodiscard]] double C() const; //возвращает значение концентрации
     void C(double concentrate_set);
     [[nodiscard]] bool type() const; //возвращает значение типа точки
@@ -40,7 +40,7 @@ public:
     [[nodiscard]] int rad() const; // возвращает радиус
     [[nodiscard]] int len() const; // возвращает длину
     [[nodiscard]] Point &at(int k, int i, int j) const; // возвращает класс точки
-    void print(const std::string& via) const; // печатает в файл границы
+    void printType(const std::string& via) const; // печатает в файл границы
     void printC(const std::string& via) const; // печатает в файл конацентрацию в каждой точке
 };
 
